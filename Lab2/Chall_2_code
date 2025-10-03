@@ -1,0 +1,49 @@
+from pathlib import Path
+from binascii import hexlify
+
+CIPHERTEXT_PATH = '/Users/hrishikeshbingewar/Downloads/vscode/EE325/Q5/ciphertext .bin'
+BLOCK = 16
+HEADER = (
+    "_Have you heard about the quick brown fox which jumps over the lazy dog?\n"
+    "__The decimal number system uses the digits 0123456789!\n"
+    "___The flag is: "
+)
+
+def read_blocks(path, size):
+    data = Path(path).read_bytes()
+    return [data[i:i+size] for i in range(0, len(data), size)]
+
+def main():
+    blocks = read_blocks(CIPHERTEXT_PATH, BLOCK)
+
+    table = {}
+    for pos, ch in enumerate(HEADER):
+        table[blocks[pos]] = ch
+
+    result = []
+    unknown = []
+    for pos, blk in enumerate(blocks[len(HEADER):], start=len(HEADER)):
+        if blk in table:
+            result.append(table[blk])
+        else:
+            result.append("?")
+            unknown.append((pos, hexlify(blk).decode()))
+
+    decoded = "".join(result)
+    print("The recovered tail is:")
+    print(decoded)
+
+    if unknown:
+        print("\nThe unmapped blocks are:")
+        for idx, h in unknown:
+            print(idx, h)
+
+    out = Path("/Users/hrishikeshbingewar/Downloads/vscode/EE325/Q5/output.txt")
+    out.write_text(decoded)
+    print("\nSaved:", out)
+
+    print("\nHeader check:")
+    print(HEADER)
+
+if __name__ == "__main__":
+    main()
