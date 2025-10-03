@@ -1,0 +1,12 @@
+def strxor(a,b): return bytes([x^y for x,y in zip(a,b)])
+
+p1_xor_p2 = b' \x01M@M\x0c\x15\x0e\x02\x1c,\x1d\x1aM\x03-\x15\x10\x11:\x05\x11\x15&R\x0c\x1b\x05\n3\x15\n\x1eP\x01\x1b\x0c\x1d\x1a\x16\x076\x10\x04\x0fU\x13\x1d\x00\x18BJ\x0e'
+
+# candidate full P2 and the flag that matches it
+p2 = b"cryptanalysis frequently involves statistical attacks"
+p1_from_xor = strxor(p1_xor_p2[:len(p2)], p2)
+print(p1_from_xor.decode(errors="replace"))
+# or check the simpler flag
+flag = b"Cs409m{one_time_pad_key_reuse_compromises_security!!}"
+p2_from_flag = strxor(p1_xor_p2[:len(flag)], flag)
+print(p2_from_flag.decode(errors="replace"))
