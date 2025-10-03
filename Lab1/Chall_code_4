@@ -1,0 +1,35 @@
+with open("ciphertext.enc", "rb") as f:
+    cipher_bytes = f.read()
+
+with open("keyfile", "rb") as f:
+    key_bytes = f.read()
+
+cipher_int = int.from_bytes(cipher_bytes, byteorder='big')
+
+n_prime = len(cipher_bytes)
+key_bytes = key_bytes[:n_prime]
+
+cdigits = []
+temp = cipher_int
+for i in range(n_prime):
+    remainder = temp % 255
+    cdigits.append(remainder)
+    temp //= 255
+
+cdigits.reverse()
+
+pdigits = []
+for i in range(n_prime):
+    c_i = cdigits[i]
+    k_i = key_bytes[i]
+    p_i = (c_i - k_i + 256) % 255
+    pdigits.append(p_i)
+
+plaintext_int = 0
+for p in pdigits:
+    plaintext_int = plaintext_int * 255 + p
+
+plaintext_bytes_len = plaintext_int.bit_length()
+plaintext_bytes = plaintext_int.to_bytes(plaintext_bytes_len, byteorder='big')
+
+print(plaintext_bytes.decode(errors='ignore'))
