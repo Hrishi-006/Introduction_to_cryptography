@@ -1,0 +1,1 @@
+openssl pkeyutl -decrypt -pkeyopt rsa_padding_mode:oaep -inkey "/Users/hrishikeshbingewar/Downloads/CS409/priv.pem" -in "/Users/hrishikeshbingewar/Downloads/CS409/cipher.bin" -out "/Users/hrishikeshbingewar/Downloads/CS409/out.txt”
